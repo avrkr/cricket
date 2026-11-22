@@ -6,6 +6,7 @@ const grad = ["from-emerald-600 to-teal-800", "from-sky-600 to-indigo-800", "fro
 export default async function Home() {
   const { supabase } = await session();
   const { data: ts } = await supabase.from("tournaments").select("*").order("created_at", { ascending: false });
+  const { data: live } = await supabase.from("matches").select("id,venue,tournament_id,team_a,team_b,tournaments(name)").eq("status", "live");
   const { data: teams } = await supabase.from("teams").select("id,name,short_name,color,logo_url,tournament_id").order("created_at");
   return (
     <div className="space-y-10">
@@ -31,6 +32,19 @@ export default async function Home() {
               : <div className="mt-5 flex flex-wrap gap-2">{ts.map((t) => <Link key={t.id} href={`/t/${t.id}/register-${b.kind}`} className={`rounded-xl px-4 py-2 text-sm font-bold shadow transition ${b.btn}`}>{t.name} →</Link>)}</div>}
           </div>))}
       </section>
+
+      {!!live?.length && <section>
+        <h2 className="section-title">🔴 Live matches</h2>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {live.map((m) => { const n = (id: string) => teams?.find((x) => x.id === id)?.name ?? "?"; return (
+            <Link key={m.id} href={`/score/${m.id}`} className="card lift border-red-200 bg-gradient-to-br from-red-50 to-white">
+              <span className="pill bg-red-600 text-white animate-pulse">● LIVE</span>
+              <div className="mt-2 text-lg font-black">{n(m.team_a)} <span className="text-slate-400">vs</span> {n(m.team_b)}</div>
+              <div className="text-sm text-slate-500">{(m.tournaments as unknown as { name: string } | null)?.name}{m.venue && ` · 📍 ${m.venue}`}</div>
+              <div className="mt-2 text-sm font-semibold text-emerald-700">Live score &amp; summary →</div>
+            </Link>); })}
+        </div>
+      </section>}
 
       {!!teams?.length && <section>
         <h2 className="section-title">Teams</h2>
