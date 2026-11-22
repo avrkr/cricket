@@ -36,7 +36,7 @@ export default async function Tournament({ params }: { params: Promise<{ id: str
 
   return (
     <div>
-      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-800 to-slate-950 text-white shadow-xl">
+      <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-800 to-slate-950 text-white shadow-xl animate-gradient">
         {t.banner_url && /* eslint-disable-next-line @next/next/no-img-element */ <img src={t.banner_url} alt="" className="absolute inset-0 h-full w-full object-cover opacity-30" />}
         <div className="relative p-6 sm:p-10">
           <div className="flex flex-wrap items-center gap-2"><span className={`pill ${statusTone[t.status]}`}>{t.status.toUpperCase()}</span><span className="pill bg-white/20 text-white">{t.format}</span></div>
@@ -124,9 +124,9 @@ export default async function Tournament({ params }: { params: Promise<{ id: str
 
       <H>Teams ({approvedTeams.length}/{t.num_teams})</H>
       <div className="grid gap-4 md:grid-cols-2">
-        {approvedTeams.map((tm) => {
+        {approvedTeams.map((tm, i) => {
           const squad = P.filter((p) => p.team_id === tm.id);
-          return (<div key={tm.id} className="card" style={{ borderTop: `5px solid ${tm.color}` }}>
+          return (<div key={tm.id} className="card animate-fade-up lift" style={{ animationDelay: `${i * 60}ms`, borderTop: `5px solid ${tm.color}` }}>
             <div className="flex items-center gap-3">
               {tm.logo_url /* eslint-disable-next-line @next/next/no-img-element */ && <img src={tm.logo_url} alt="" className="h-12 w-12 rounded-full object-cover" />}
               <div><div className="text-lg font-bold">{tm.name} <span className="text-sm font-normal text-slate-400">{tm.short_name}</span></div>
@@ -139,8 +139,8 @@ export default async function Tournament({ params }: { params: Promise<{ id: str
 
       <H>Players ({approvedPlayers.length})</H>
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        {approvedPlayers.map((p) => (
-          <div key={p.id} className="card flex gap-3 p-4 text-sm">
+        {approvedPlayers.map((p, i) => (
+          <div key={p.id} style={{ animationDelay: `${Math.min(i, 12) * 40}ms` }} className="card lift animate-fade-up flex gap-3 p-4 text-sm">
             {p.photo_url /* eslint-disable-next-line @next/next/no-img-element */ ? <img src={p.photo_url} alt="" className="h-20 w-20 rounded-xl object-cover" /> : <div className="grid h-20 w-20 place-items-center rounded-xl bg-slate-100 text-3xl">🏏</div>}
             <div className="flex-1">
               <Link href={`/t/${id}/players/${p.id}`} className="font-bold hover:text-emerald-700 hover:underline">{p.full_name}</Link>

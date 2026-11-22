@@ -154,6 +154,7 @@ export default function AuctionRoom({ auctionId, tournamentId, mode, myTeamId, c
           )}
           {showResult && (
             <div onClick={() => setDismissed(last.id)} className="animate-pop absolute inset-0 z-10 grid cursor-pointer place-items-center bg-slate-950/90 text-center">
+              {last.type === "sold" && Array.from({ length: 36 }, (_, i) => <span key={i} className="confetti" style={{ left: `${(i * 37) % 100}%`, animationDelay: `${(i % 9) * 120}ms`, background: ["#fbbf24", "#34d399", "#60a5fa", "#f472b6", "#fff"][i % 5] }} />)}
               {last.type === "sold" ? (<div>
                 <div className="text-6xl font-black tracking-widest text-amber-400">SOLD!</div>
                 <div className="mt-2 text-3xl font-bold">{last.p?.full_name}</div>

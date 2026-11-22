@@ -1,3 +1,5 @@
+import { Suspense } from "react";
+import TopProgress from "@/components/TopProgress";
 import SubmitButton from "@/components/SubmitButton";
 import type { Metadata } from "next";
 import Link from "next/link";
@@ -15,6 +17,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en" className={font.variable}>
       <body className="min-h-screen bg-slate-50 font-sans text-slate-900 antialiased">
+        <Suspense><TopProgress /></Suspense>
         <header className="sticky top-0 z-40 border-b border-white/10 bg-slate-950/95 text-white backdrop-blur">
           <nav className="mx-auto flex max-w-6xl items-center gap-5 px-4 py-3 text-sm">
             <Link href="/" className="flex items-center gap-2 text-base font-extrabold tracking-tight">
