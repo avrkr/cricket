@@ -20,7 +20,7 @@ export default async function Stats({ params }: { params: Promise<{ id: string }
       <StatsCharts runs={top("runs")} wickets={top("wickets")} points={pts ?? []} />
       <div className="overflow-x-auto"><table className="tbl">
         <thead><tr><th>Player</th><th>Runs</th><th>Balls</th><th>SR</th><th>4s</th><th>6s</th><th>Wkts</th><th>Econ</th></tr></thead>
-        <tbody>{all.map((p) => <tr key={p.player_id}><td>{p.full_name}</td><td>{p.runs}</td><td>{p.balls_faced}</td><td>{sr(p.runs, p.balls_faced)}</td><td>{p.fours}</td><td>{p.sixes}</td><td>{p.wickets}</td><td>{econ(p.runs_conceded, p.balls_bowled)}</td></tr>)}</tbody>
+        <tbody>{all.map((p) => <tr key={p.player_id}><td><Link href={`/t/${id}/players/${p.player_id}`} className="font-medium text-emerald-700 hover:underline">{p.full_name}</Link></td><td>{p.runs}</td><td>{p.balls_faced}</td><td>{sr(p.runs, p.balls_faced)}</td><td>{p.fours}</td><td>{p.sixes}</td><td>{p.wickets}</td><td>{econ(p.runs_conceded, p.balls_bowled)}</td></tr>)}</tbody>
       </table></div>
     </div>
   );

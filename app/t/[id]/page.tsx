@@ -143,7 +143,7 @@ export default async function Tournament({ params }: { params: Promise<{ id: str
           <div key={p.id} className="card flex gap-3 p-4 text-sm">
             {p.photo_url /* eslint-disable-next-line @next/next/no-img-element */ ? <img src={p.photo_url} alt="" className="h-20 w-20 rounded-xl object-cover" /> : <div className="grid h-20 w-20 place-items-center rounded-xl bg-slate-100 text-3xl">🏏</div>}
             <div className="flex-1">
-              <div className="font-bold">{p.full_name}</div>
+              <Link href={`/t/${id}/players/${p.id}`} className="font-bold hover:text-emerald-700 hover:underline">{p.full_name}</Link>
               <div className="font-mono text-xs text-slate-400">{p.reg_code}</div>
               <div className="mt-1 flex flex-wrap gap-1"><span className="pill">{p.role}</span>{p.is_overseas && <span className="pill">✈</span>}{p.is_retained && <span className="pill">retained</span>}
                 <span className={`pill ${p.auction_status === "sold" ? "bg-emerald-100 text-emerald-800" : ""}`}>{p.auction_status}</span></div>
