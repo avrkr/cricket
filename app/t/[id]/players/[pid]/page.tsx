@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/purity */
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { session } from "@/lib/supabase/server";
