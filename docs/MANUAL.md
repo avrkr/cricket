@@ -48,6 +48,7 @@ Replace `<site>` with your deployed URL (or `http://localhost:3000` locally), an
 3. The organizer sends you a **private bidding link**: `<site>/t/<id>/auction/bid?code=XXXX`. Keep it secret — it *is* your login for bidding.
 4. On auction day open that link. You'll see the current player, current price, your purse and squad. Press **Place bid** to bid (the price rises by the increment; the timer resets on each bid). You cannot bid if you lack purse or your squad is full.
 5. Follow your squad and remaining purse live on the same page.
+6. Your team page (Home → **Teams** → your team) lists your squad automatically, with top run-scorer and top wicket-taker — no lookup needed.
 
 ---
 
@@ -56,7 +57,7 @@ Replace `<site>` with your deployed URL (or `http://localhost:3000` locally), an
 1. Open `<site>/t/<id>/register-player`, fill in profile and stats → submit.
 2. **Save your Registration ID** (`PL-…`) — shown after registering.
 3. Check status anytime: `<site>/t/<id>/status` → **Player lookup** (Registration ID + mobile). It shows Registration ✔, auction status (available / sold / unsold) and, if sold, the winning team and price.
-4. Your public profile is at `/t/<id>/players/<playerId>`; tournament leaderboards are at `/t/<id>/stats` (searchable by name).
+4. Your public profile (runs, balls, strike rate, average, 4s, 6s, wickets, economy) is at `/t/<id>/players/<playerId>`; tournament leaderboards are at `/t/<id>/stats` (searchable by name).
 
 ---
 
@@ -66,6 +67,9 @@ Replace `<site>` with your deployed URL (or `http://localhost:3000` locally), an
 - On the tournament page, when an auction is running a pulsing **🔴 Watch live auction** button appears → `<site>/t/<id>/auction?a=<auctionId>`.
 - You see: current player, current highest bid & bidding team, countdown timer, bid history, each team's remaining purse and squad. It updates in real time — no refresh needed.
 - Past/upcoming auctions are listed as buttons on the tournament page.
+
+### Browse teams & players
+- Home page → **Teams** → tap a team (`/t/<id>/teams/<teamId>`) to see its players, top run-scorer and top wicket-taker. Tap any player for full stats.
 
 ### Live score
 - On the tournament page, under **Fixtures & results**, press **Live score** next to a match (`<site>/score/<matchId>`). Completed matches show **Scorecard**.
