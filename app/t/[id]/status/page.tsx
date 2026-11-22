@@ -8,6 +8,7 @@ export default async function Status({ params, searchParams }: { params: Promise
   const { supabase } = await session();
   const player = q.code && q.phone ? (await supabase.rpc("player_status", { p_tid: id, p_phone: q.phone, p_code: q.code })).data?.[0] : null;
   const team = q.team && q.email ? (await supabase.rpc("team_status", { p_tid: id, p_email: q.email, p_short: q.team })).data?.[0] : null;
+  const teamId = team ? (await supabase.from("teams").select("id").eq("tournament_id", id).ilike("short_name", q.team!).single()).data?.id : null;
   const asked = (q.code && q.phone) || (q.team && q.email);
 
   return (
@@ -24,7 +25,7 @@ export default async function Status({ params, searchParams }: { params: Promise
           </>}
           {team && <>
             <div className="text-lg font-bold">{team.name}</div>
-            <div>Registered ✔</div>
+            <div>Registered ✔ · {teamId && <Link href={`/t/${id}/teams/${teamId}`} className="font-semibold text-emerald-700 underline">View team members →</Link>}</div>
             <p className="text-sm text-slate-600">The organizer will send you your private bidding link.</p>
           </>}
         </div>)}

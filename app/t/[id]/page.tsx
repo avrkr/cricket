@@ -129,7 +129,7 @@ export default async function Tournament({ params }: { params: Promise<{ id: str
           return (<div key={tm.id} className="card animate-fade-up lift" style={{ animationDelay: `${i * 60}ms`, borderTop: `5px solid ${tm.color}` }}>
             <div className="flex items-center gap-3">
               {tm.logo_url /* eslint-disable-next-line @next/next/no-img-element */ && <img src={tm.logo_url} alt="" className="h-12 w-12 rounded-full object-cover" />}
-              <div><div className="text-lg font-bold">{tm.name} <span className="text-sm font-normal text-slate-400">{tm.short_name}</span></div>
+              <div><Link href={`/t/${id}/teams/${tm.id}`} className="text-lg font-bold hover:text-emerald-700 hover:underline">{tm.name}</Link> <span className="text-sm font-normal text-slate-400">{tm.short_name}</span>
                 <div className="text-sm text-slate-500">Purse {money(tm.purse)} · Squad {squad.length}/{t.max_squad}</div></div>
             </div>
             <ul className="mt-3 divide-y text-sm">{squad.map((p) => <li key={p.id} className="flex justify-between py-1.5"><span>{p.full_name} <span className="text-slate-400">· {p.role}</span></span><b>{money(p.sold_price)}</b></li>)}</ul>
