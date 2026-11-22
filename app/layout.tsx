@@ -1,3 +1,4 @@
+import SubmitButton from "@/components/SubmitButton";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Geist } from "next/font/google";
@@ -27,7 +28,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
                 {!!unread && <b className="absolute -right-3 -top-2 rounded-full bg-red-600 px-1.5 text-[10px]">{unread}</b>}</Link>
               <form action={signOut} className="flex items-center gap-3">
                 <span className="hidden text-slate-400 sm:inline">{name ?? "Admin"}</span>
-                <button className="rounded-lg border border-white/20 px-3 py-1.5 hover:bg-white/10">Sign out</button>
+                <SubmitButton className="rounded-lg border border-white/20 px-3 py-1.5 hover:bg-white/10">Sign out</SubmitButton>
               </form>
             </>) : <Link href="/login" className="rounded-lg border border-white/20 px-3 py-1.5 text-slate-300 hover:bg-white/10">Admin login</Link>}
           </nav>

@@ -18,10 +18,10 @@ export default async function Stats({ params }: { params: Promise<{ id: string }
       <Link href={`/t/${id}`} className="text-sm text-emerald-700 underline">← Tournament</Link>
       <h1 className="text-2xl font-extrabold">Player statistics</h1>
       <StatsCharts runs={top("runs")} wickets={top("wickets")} points={pts ?? []} />
-      <table className="tbl">
+      <div className="overflow-x-auto"><table className="tbl">
         <thead><tr><th>Player</th><th>Runs</th><th>Balls</th><th>SR</th><th>4s</th><th>6s</th><th>Wkts</th><th>Econ</th></tr></thead>
         <tbody>{all.map((p) => <tr key={p.player_id}><td>{p.full_name}</td><td>{p.runs}</td><td>{p.balls_faced}</td><td>{sr(p.runs, p.balls_faced)}</td><td>{p.fours}</td><td>{p.sixes}</td><td>{p.wickets}</td><td>{econ(p.runs_conceded, p.balls_bowled)}</td></tr>)}</tbody>
-      </table>
+      </table></div>
     </div>
   );
 }

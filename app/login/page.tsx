@@ -33,7 +33,7 @@ export default function Login() {
         <div><label className="label">Password</label><input type="password" className="input" {...register("password")} />
           {errors.password && <p className="mt-1 text-xs text-red-600">{errors.password.message as string}</p>}</div>
         {err && <p className="rounded-lg bg-red-50 p-2 text-sm text-red-700">{err}</p>}
-        <button type="submit" className="btn w-full" disabled={isSubmitting}>{isSubmitting ? "Signing in…" : "Sign in"}</button>
+        <button type="submit" className="btn w-full" disabled={isSubmitting}>{isSubmitting && <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />}{isSubmitting ? "Signing in…" : "Sign in"}</button>
         <p className="text-xs text-slate-500">Players and team owners don&apos;t need an account — use the registration buttons on a tournament page.</p>
       </form>
     </div>

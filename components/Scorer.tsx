@@ -17,6 +17,7 @@ export default function Scorer({ match, teams, squad, canScore }: { match: any; 
   const [balls, setBalls] = useState<any[]>([]);
   const [innings, setInnings] = useState(1);
   const [err, setErr] = useState("");
+  const [busy, setBusy] = useState(false);
   const [status, setStatus] = useState(match.status);
   const [extra, setExtra] = useState<"" | "wide" | "noball" | "bye" | "legbye">("");
   const [batter, setBatter] = useState(""); const [bowler, setBowler] = useState(""); const [kind, setKind] = useState("bowled");
@@ -35,11 +36,12 @@ export default function Scorer({ match, teams, squad, canScore }: { match: any; 
   }, [sb, match.id, load]);
 
   const add = async (b: object) => {
-    setErr("");
+    setErr(""); setBusy(true);
     const batting_team = innings === 1 ? match.team_a : match.team_b;
     const { error } = await sb.from("ball_events").insert({ match_id: match.id, innings, batting_team, batter_id: batter || null, bowler_id: bowler || null, ...b });
     if (error) setErr(error.message);
     if (status === "scheduled") { await sb.from("matches").update({ status: "live" }).eq("id", match.id); setStatus("live"); }
+    setBusy(false);
   };
   // Runs button meaning depends on the extra mode: no-ball = bat runs + 1 penalty, wide = all extras, bye/leg-bye = extras.
   const score = (r: number) => {
@@ -81,6 +83,7 @@ export default function Scorer({ match, teams, squad, canScore }: { match: any; 
               {squad.filter((p) => p.team_id === (innings === 1 ? match.team_b : match.team_a)).map((p) => <option key={p.id} value={p.id}>{p.full_name}</option>)}</select>
             <select className="input" value={kind} onChange={(e) => setKind(e.target.value)}>{["bowled", "caught", "lbw", "run out", "stumped", "hit wicket"].map((k) => <option key={k}>{k}</option>)}</select>
           </div>
+          <fieldset disabled={busy} className="contents">
           <div className="flex flex-wrap gap-2">
             {(["wide", "noball", "bye", "legbye"] as const).map((x) => <button key={x} className={extra === x ? "btn" : "btn-alt"} onClick={() => setExtra(extra === x ? "" : x)}>{x}</button>)}
           </div>
@@ -90,6 +93,7 @@ export default function Scorer({ match, teams, squad, canScore }: { match: any; 
             <button className="btn-alt" onClick={undo}>Undo</button>
             <button className="btn-alt" onClick={() => confirm("Finish match?") && finish()}>Finish match</button>
           </div>
+          </fieldset>
           {err && <p className="text-sm text-red-600">{err}</p>}
         </div>
       )}

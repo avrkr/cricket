@@ -53,7 +53,7 @@ export default function RhfForm({ title, schema, fields, defaults, action, submi
         );
       })}
       {err && <p className="text-sm text-red-600 sm:col-span-2">{err}</p>}
-      <Button type="submit" disabled={isSubmitting} className="h-11 bg-emerald-600 text-base font-semibold text-white hover:bg-emerald-700 sm:col-span-2">{isSubmitting ? "Saving…" : submitLabel}</Button>
+      <Button type="submit" disabled={isSubmitting} className="h-11 bg-emerald-600 text-base font-semibold text-white hover:bg-emerald-700 sm:col-span-2">{isSubmitting && <span className="mr-2 inline-block h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />}{isSubmitting ? "Saving…" : submitLabel}</Button>
     </form>
   );
 }

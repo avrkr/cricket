@@ -36,6 +36,7 @@ export default function AuctionRoom({ auctionId, tournamentId, mode, myTeamId, c
   const [msg, setMsg] = useState("");
   const [custom, setCustom] = useState("");
   const [online, setOnline] = useState(true);
+  const [busy, setBusy] = useState(false);
   const resolving = useRef("");
 
   const load = useCallback(async () => {
@@ -83,14 +84,19 @@ export default function AuctionRoom({ auctionId, tournamentId, mode, myTeamId, c
   }, [left, a, sb, auctionId]);
 
   const rpc = async (fn: string, args: object) => {
-    setMsg("");
+    setMsg(""); setBusy(true);
     const { error } = await sb.rpc(fn, args);
-    if (error) setMsg(error.message); else load();
+    if (error) setMsg(error.message); else await load();
+    setBusy(false);
   };
   const ctl = (action: string, p_secs = 0) => rpc("auction_control", { p_auction: auctionId, p_action: action, p_secs });
   const bid = (amount: number) => rpc("place_bid", { p_auction: auctionId, p_code: code, p_amount: amount });
 
-  if (!a) return <div className="rounded-3xl bg-slate-950 p-16 text-center text-slate-400">Loading auction…</div>;
+  if (!a) return (
+    <div className="space-y-5 rounded-3xl bg-slate-950 p-6" aria-busy="true">
+      <div className="h-8 w-56 animate-pulse rounded-full bg-white/10" />
+      <div className="grid gap-5 lg:grid-cols-3"><div className="h-80 animate-pulse rounded-2xl bg-white/10 lg:col-span-2" /><div className="h-80 animate-pulse rounded-2xl bg-white/10" /></div>
+    </div>);
   const minBid = a.current_team_id ? a.current_bid + a.increment : a.current_bid;
   const leader = teams.find((t) => t.id === a.current_team_id);
   const mine = teams.find((t) => t.id === myTeamId);
@@ -115,14 +121,14 @@ export default function AuctionRoom({ auctionId, tournamentId, mode, myTeamId, c
           {player ? (
             <div className="flex flex-col gap-6 sm:flex-row">
               <div className="relative">
-                {player.photo_url ? <img src={player.photo_url} alt="" className="h-72 w-full rounded-2xl object-cover sm:w-60" />
+                {player.photo_url ? <img src={player.photo_url} alt="" className="h-64 w-full rounded-2xl object-cover sm:h-72 sm:w-60" />
                   : <div className="grid h-72 w-full place-items-center rounded-2xl bg-slate-800 text-7xl sm:w-60">🏏</div>}
                 <span className="absolute left-2 top-2 rounded-full bg-black/60 px-2 py-0.5 text-[11px] font-semibold">{player.reg_code}</span>
               </div>
               <div className="flex-1 space-y-3">
                 <div className="flex flex-wrap gap-2 text-xs"><span className="rounded-full bg-amber-400 px-2.5 py-0.5 font-bold text-slate-900">{player.role}</span>
                   <span className="rounded-full bg-white/10 px-2.5 py-0.5">{player.category}</span>{player.is_overseas && <span className="rounded-full bg-sky-500/30 px-2.5 py-0.5">Overseas ✈</span>}</div>
-                <div className="text-4xl font-black leading-none tracking-tight">{player.full_name}</div>
+                <div className="text-3xl font-black leading-none tracking-tight sm:text-4xl">{player.full_name}</div>
                 <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm text-slate-300">
                   <span>Age <b className="text-white">{Math.floor((Date.now() - new Date(player.dob).getTime()) / 31557600000)}</b></span>
                   <span>Base <b className="text-white">{money(player.base_price)}</b></span>
@@ -167,16 +173,21 @@ export default function AuctionRoom({ auctionId, tournamentId, mode, myTeamId, c
       </div>
 
       {mode === "bid" && (
-        <div className="dark-card flex flex-wrap items-center gap-3">
+        <div className="dark-card sticky bottom-2 z-20 border-amber-400/30 bg-slate-900/95 shadow-2xl">
+          <fieldset disabled={busy} className="flex flex-wrap items-center gap-3 border-0 p-0">
+          {busy && <span className="h-5 w-5 animate-spin rounded-full border-2 border-amber-400 border-t-transparent" />}
           {quick.map((q, i) => <button key={i} disabled={!live} onClick={() => bid(q)} className={i === 0 ? "btn-gold h-12 px-6 text-base" : "btn-alt h-12 border-white/20 bg-white/5 text-white hover:bg-white/10"}>{i === 0 ? "BID " : ""}{money(q)}</button>)}
           <input className="h-12 w-40 rounded-lg border border-white/20 bg-white/5 px-3 text-white placeholder:text-slate-500" placeholder="Custom ₹" value={custom} onChange={(e) => setCustom(e.target.value)} />
           <button className="btn-alt h-12 border-white/20 bg-white/5 text-white hover:bg-white/10" disabled={!live || !custom} onClick={() => bid(Number(custom))}>Place bid</button>
           {a.current_team_id === myTeamId && live && <span className="font-semibold text-emerald-400">✔ You hold the highest bid</span>}
+          </fieldset>
         </div>
       )}
 
       {mode === "control" && (
-        <div className="dark-card flex flex-wrap gap-2">
+        <div className="dark-card">
+          <fieldset disabled={busy} className="flex flex-wrap items-center gap-2 border-0 p-0">
+          {busy && <span className="h-5 w-5 animate-spin rounded-full border-2 border-amber-400 border-t-transparent" />}
           {a.status === "scheduled" && <button className="btn-gold" onClick={() => ctl("start")}>▶ Start auction</button>}
           {a.status === "live" && !a.current_player_id && <button className="btn-gold" onClick={() => rpc("auction_next", { p_auction: auctionId })}>Next player →</button>}
           {a.status === "live" && <button className="btn-alt" onClick={() => ctl("pause")}>⏸ Pause</button>}
@@ -190,6 +201,7 @@ export default function AuctionRoom({ auctionId, tournamentId, mode, myTeamId, c
           </>}
           {a.status !== "closed" && <button className="btn-alt" onClick={() => ctl("round2")}>↺ Second round</button>}
           {a.status !== "closed" && <button className="btn-alt text-red-600" onClick={() => confirm("Close auction?") && ctl("close")}>Close auction</button>}
+          </fieldset>
         </div>
       )}
       {msg && <p className="rounded-lg bg-red-500/20 p-3 text-sm text-red-200">{msg}</p>}
