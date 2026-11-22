@@ -15,7 +15,7 @@ export default async function PlayerPage({ params }: { params: Promise<{ id: str
   if (!p) notFound();
   const [{ data: st }, { data: team }] = await Promise.all([
     supabase.from("player_stats").select("*").eq("player_id", pid).maybeSingle(),
-    p.team_id ? supabase.from("teams").select("name,color").eq("id", p.team_id).single() : Promise.resolve({ data: null }),
+    p.team_id ? supabase.from("teams").select("id,name,color").eq("id", p.team_id).single() : Promise.resolve({ data: null }),
   ]);
   const s = st ?? { runs: 0, balls_faced: 0, fours: 0, sixes: 0, dismissals: 0, wickets: 0, runs_conceded: 0, balls_bowled: 0 };
   const sr = s.balls_faced ? ((s.runs * 100) / s.balls_faced).toFixed(1) : "—";
@@ -25,7 +25,7 @@ export default async function PlayerPage({ params }: { params: Promise<{ id: str
 
   return (
     <div className="space-y-6">
-      <Link href={`/t/${id}/stats`} className="text-sm text-emerald-700 hover:underline">← All statistics</Link>
+      <div className="flex gap-4 text-sm text-emerald-700">{team && <Link href={`/t/${id}/teams/${team.id}`} className="hover:underline">← {team.name}</Link>}<Link href={`/t/${id}/stats`} className="hover:underline">All statistics</Link></div>
       <section className="flex flex-col gap-6 overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-800 to-slate-950 p-6 text-white shadow-xl sm:flex-row sm:p-8">
         {p.photo_url /* eslint-disable-next-line @next/next/no-img-element */ ? <img src={p.photo_url} alt="" className="h-48 w-48 rounded-2xl object-cover" /> : <div className="grid h-48 w-48 place-items-center rounded-2xl bg-white/10 text-6xl">🏏</div>}
         <div className="space-y-2">
@@ -34,7 +34,7 @@ export default async function PlayerPage({ params }: { params: Promise<{ id: str
           <div className="text-emerald-100">Age {age} · {[p.city, p.state].filter(Boolean).join(", ")} {p.jersey_no != null && `· #${p.jersey_no}`}</div>
           <div className="text-sm text-emerald-100">Bat: {p.batting_style ?? "—"} · Bowl: {p.bowling_style ?? "—"}</div>
           <div className="pt-1 text-sm">{p.auction_status === "sold" && team
-            ? <>🏆 <b style={{ color: "#fbbf24" }}>{team.name}</b> · {money(p.sold_price)}{p.is_retained && " (retained)"}</>
+            ? <>🏆 <Link href={`/t/${id}/teams/${team.id}`} className="hover:underline"><b style={{ color: "#fbbf24" }}>{team.name}</b></Link> · {money(p.sold_price)}{p.is_retained && " (retained)"}</>
             : <>Auction: <b>{p.auction_status}</b> · Base {money(p.base_price)}</>}</div>
         </div>
       </section>
