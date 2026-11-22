@@ -15,8 +15,8 @@ const guides: Guide[] = [
     ["Matches & awards", "Schedule match, then Score match ball by ball. Publish awards. The points table updates itself."],
   ] },
   { id: "team", icon: "🛡️", title: "Team owner", tone: "from-emerald-600 to-teal-800", steps: [
-    ["Register your team", "Home → Register your team. Enter team name, short name and owner email."],
-    ["Check approval", "Check my status → Team lookup (team short name + owner email)."],
+    ["Register your team", "Home → Register your team. Enter team name, short name and owner name."],
+    ["Check approval", "Check my status → Team lookup (team short name)."],
     ["Get your private link", "The organizer sends you …/auction/bid?code=XXXX. Keep it secret: it is your bidding login."],
     ["Bid on auction day", "Open the link, watch the current player and price, press Place bid. The timer resets on every bid."],
     ["Your team page", "Home → Teams → your team (or the team name on the tournament page) lists your squad automatically, with top run-scorer and top wicket-taker. No lookup needed."],
@@ -25,7 +25,7 @@ const guides: Guide[] = [
   { id: "player", icon: "🏏", title: "Player", tone: "from-amber-400 to-orange-500", steps: [
     ["Register", "Home → Register as player. Fill in your profile and stats."],
     ["Save your Registration ID", "It looks like PL-… and is shown after you register."],
-    ["Track your status", "Check my status → Player lookup (Registration ID + mobile). Shows available, sold or unsold, and the winning team and price."],
+    ["Track your status", "Check my status → Player lookup (Registration ID). Shows available, sold or unsold, and the winning team and price."],
     ["Profile & stats", "Your public profile shows runs, balls, strike rate, average, fours, sixes, wickets and economy. Find it from your team page or 📊 Statistics."],
   ] },
   { id: "live", icon: "🔴", title: "Watch live score & bidding", tone: "from-red-600 to-rose-800", steps: [

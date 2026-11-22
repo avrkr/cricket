@@ -43,8 +43,8 @@ Replace `<site>` with your deployed URL (or `http://localhost:3000` locally), an
 
 ## 2. Team owner
 
-1. Open `<site>/t/<id>/register-team`, enter team name, short name, owner email etc. → submit.
-2. Check approval anytime: `/t/<id>/status` → **Team lookup** (team short name + owner email).
+1. Open `<site>/t/<id>/register-team`, enter team name, short name, owner name etc. → submit.
+2. Check approval anytime: `/t/<id>/status` → **Team lookup** (team short name).
 3. The organizer sends you a **private bidding link**: `<site>/t/<id>/auction/bid?code=XXXX`. Keep it secret — it *is* your login for bidding.
 4. On auction day open that link. You'll see the current player, current price, your purse and squad. Press **Place bid** to bid (the price rises by the increment; the timer resets on each bid). You cannot bid if you lack purse or your squad is full.
 5. Follow your squad and remaining purse live on the same page.
@@ -56,7 +56,7 @@ Replace `<site>` with your deployed URL (or `http://localhost:3000` locally), an
 
 1. Open `<site>/t/<id>/register-player`, fill in profile and stats → submit.
 2. **Save your Registration ID** (`PL-…`) — shown after registering.
-3. Check status anytime: `<site>/t/<id>/status` → **Player lookup** (Registration ID + mobile). It shows Registration ✔, auction status (available / sold / unsold) and, if sold, the winning team and price.
+3. Check status anytime: `<site>/t/<id>/status` → **Player lookup** (Registration ID). It shows Registration ✔, auction status (available / sold / unsold) and, if sold, the winning team and price.
 4. Your public profile (runs, balls, strike rate, average, 4s, 6s, wickets, economy) is at `/t/<id>/players/<playerId>`; tournament leaderboards are at `/t/<id>/stats` (searchable by name).
 
 ---
@@ -83,7 +83,7 @@ Replace `<site>` with your deployed URL (or `http://localhost:3000` locally), an
 | No admin panel | Sign in; your role must be organizer/super_admin and you must own the tournament |
 | Bidding link says invalid | Re-copy it from the admin panel; the code is per team |
 | Live page not updating | Refresh once; check internet (uses realtime connection) |
-| Can't find my registration | Use exact Registration ID + same mobile (players) or short name + same email (teams) |
+| Can't find my registration | Use the exact Registration ID (players) or team short name (teams) |
 
 ## 6. Deploy / run (for the developer)
 ```bash

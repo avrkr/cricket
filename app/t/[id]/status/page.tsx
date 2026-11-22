@@ -1,15 +1,15 @@
 import Link from "next/link";
 import { session } from "@/lib/supabase/server";
 
-type SP = { code?: string; phone?: string; team?: string; email?: string };
+type SP = { code?: string; team?: string };
 
 export default async function Status({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<SP> }) {
   const { id } = await params; const q = await searchParams;
   const { supabase } = await session();
-  const player = q.code && q.phone ? (await supabase.rpc("player_status", { p_tid: id, p_phone: q.phone, p_code: q.code })).data?.[0] : null;
-  const team = q.team && q.email ? (await supabase.rpc("team_status", { p_tid: id, p_email: q.email, p_short: q.team })).data?.[0] : null;
+  const player = q.code ? (await supabase.rpc("player_status", { p_tid: id, p_code: q.code })).data?.[0] : null;
+  const team = q.team ? (await supabase.rpc("team_status", { p_tid: id, p_short: q.team })).data?.[0] : null;
   const teamId = team ? (await supabase.from("teams").select("id").eq("tournament_id", id).ilike("short_name", q.team!).single()).data?.id : null;
-  const asked = (q.code && q.phone) || (q.team && q.email);
+  const asked = q.code || q.team;
 
   return (
     <div className="mx-auto max-w-xl space-y-5">
@@ -33,11 +33,11 @@ export default async function Status({ params, searchParams }: { params: Promise
 
       <form className="card grid gap-3 sm:grid-cols-3">
         <b className="sm:col-span-3">Player lookup</b>
-        <input name="code" placeholder="Registration ID (PL-…)" className="input" /><input name="phone" placeholder="Mobile" className="input" /><button className="btn">Check</button>
+        <input name="code" placeholder="Registration ID (PL-…)" className="input" /><button className="btn">Check</button>
       </form>
       <form className="card grid gap-3 sm:grid-cols-3">
         <b className="sm:col-span-3">Team lookup</b>
-        <input name="team" placeholder="Team short name" className="input" /><input name="email" placeholder="Owner email" className="input" /><button className="btn">Check</button>
+        <input name="team" placeholder="Team short name" className="input" /><button className="btn">Check</button>
       </form>
     </div>
   );

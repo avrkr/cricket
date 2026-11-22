@@ -14,11 +14,11 @@ export const tournamentSchema = z.object({
 
 export const teamSchema = z.object({
   name: req, short_name: z.string().trim().min(2, "2-5 letters").max(5, "2-5 letters"),
-  owner_name: req, owner_email: z.string().email(), owner_phone: z.string().trim().min(7, "Required"),
+  owner_name: req,
 });
 
 export const playerSchema = z.object({
-  full_name: req, dob: req, phone: z.string().trim().min(7, "Required"),
+  full_name: req, dob: req,
   role: z.enum(["Batsman", "Bowler", "All-rounder", "Wicketkeeper"]), jersey_no: optNum, base_price: optNum,
 });
 

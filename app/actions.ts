@@ -12,7 +12,7 @@ async function run(fn: () => Promise<string>): Promise<Result> {
   catch (e) {
     if (e instanceof z.ZodError) return { error: e.issues.map((i) => `${i.path.join(".")}: ${i.message}`).join("; ") };
     const m = e instanceof Error ? e.message : "Something went wrong";
-    return { error: m.includes("duplicate key") ? "Already registered: that phone, email or team short name is taken for this tournament." : m };
+    return { error: m.includes("duplicate key") ? "Already registered: that team short name is taken for this tournament." : m };
   }
 }
 const fields = (f: FormData) => Object.fromEntries([...f.entries()].filter(([, v]) => typeof v === "string")) as Record<string, string>;
@@ -66,7 +66,7 @@ export async function registerTeam(tid: string, f: FormData) {
       ...v, tournament_id: tid, city: s(f, "city"), description: s(f, "description"), color: s(f, "color"),
       logo_url: await upload(f, "logo", "reg"), docs_url: await upload(f, "docs", "reg"),
     }));
-    return `/t/${tid}/status?${new URLSearchParams({ team: v.short_name, email: v.owner_email })}`;
+    return `/t/${tid}/status?${new URLSearchParams({ team: v.short_name })}`;
   });
 }
 
@@ -77,15 +77,15 @@ export async function registerPlayer(tid: string, f: FormData) {
     const id = crypto.randomUUID(); // anon cannot read the new row back, so derive the reg code here (same rule as the DB trigger)
     const photo = await upload(f, "photo", "reg");
     check(await supabase.from("players").insert({
-      id, full_name: v.full_name, dob: v.dob, phone: v.phone, role: v.role, tournament_id: tid,
-      email: s(f, "email"), city: s(f, "city"), state: s(f, "state"),
+      id, full_name: v.full_name, dob: v.dob, role: v.role, tournament_id: tid,
+      city: s(f, "city"), state: s(f, "state"),
       batting_style: s(f, "batting_style"), bowling_style: s(f, "bowling_style"), jersey_no: v.jersey_no ? +v.jersey_no : null,
       previous_teams: s(f, "previous_teams"), experience: s(f, "experience"), bat_stats: s(f, "bat_stats"),
       bowl_stats: s(f, "bowl_stats"), keeper_exp: s(f, "keeper_exp"), base_price: v.base_price ? +v.base_price : 0,
       available: f.get("available") === "on", is_overseas: f.get("is_overseas") === "on", photo_url: photo,
     }));
     const code = "PL-" + id.replace(/-/g, "").slice(0, 8).toUpperCase();
-    return `/t/${tid}/status?${new URLSearchParams({ code, phone: v.phone })}`;
+    return `/t/${tid}/status?${new URLSearchParams({ code })}`;
   });
 }
 

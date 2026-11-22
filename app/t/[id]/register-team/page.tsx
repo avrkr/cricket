@@ -4,8 +4,8 @@ import RhfForm from "@/components/RhfForm";
 
 const fields: FieldDef[] = [
   { name: "name", label: "Team name" }, { name: "short_name", label: "Short name (2-5 letters)" },
-  { name: "owner_name", label: "Owner name" }, { name: "owner_email", label: "Owner email", type: "email" },
-  { name: "owner_phone", label: "Owner phone" }, { name: "city", label: "City" },
+  { name: "owner_name", label: "Owner name" },
+  { name: "city", label: "City" },
   { name: "color", label: "Team colour", type: "color" }, { name: "logo", label: "Logo", type: "file" },
   { name: "docs", label: "Registration documents", type: "file", span: 2 },
   { name: "description", label: "Description", type: "textarea", span: 2 },

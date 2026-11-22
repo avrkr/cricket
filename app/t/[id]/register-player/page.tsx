@@ -4,7 +4,6 @@ import RhfForm from "@/components/RhfForm";
 
 const fields: FieldDef[] = [
   { name: "full_name", label: "Full name" }, { name: "dob", label: "Date of birth", type: "date" },
-  { name: "phone", label: "Mobile" }, { name: "email", label: "Email", type: "email" },
   { name: "city", label: "City" }, { name: "state", label: "State" },
   { name: "role", label: "Playing role", type: "select", options: ["Batsman", "Bowler", "All-rounder", "Wicketkeeper"] },
   { name: "jersey_no", label: "Jersey number", type: "number" },
