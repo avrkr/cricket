@@ -6,6 +6,7 @@ const grad = ["from-emerald-600 to-teal-800", "from-sky-600 to-indigo-800", "fro
 export default async function Home() {
   const { supabase } = await session();
   const { data: ts } = await supabase.from("tournaments").select("*").order("created_at", { ascending: false });
+  const { data: teams } = await supabase.from("teams").select("id,name,short_name,color,logo_url,tournament_id").order("created_at");
   return (
     <div className="space-y-10">
       <section className="relative overflow-hidden rounded-3xl bg-gradient-to-br from-emerald-800 via-emerald-950 to-slate-950 animate-gradient p-8 text-white shadow-xl sm:p-14">
@@ -30,6 +31,17 @@ export default async function Home() {
               : <div className="mt-5 flex flex-wrap gap-2">{ts.map((t) => <Link key={t.id} href={`/t/${t.id}/register-${b.kind}`} className={`rounded-xl px-4 py-2 text-sm font-bold shadow transition ${b.btn}`}>{t.name} →</Link>)}</div>}
           </div>))}
       </section>
+
+      {!!teams?.length && <section>
+        <h2 className="section-title">Teams</h2>
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          {teams.map((tm) => (
+            <Link key={tm.id} href={`/t/${tm.tournament_id}/teams/${tm.id}`} className="card lift flex items-center gap-3 p-4" style={{ borderTop: `5px solid ${tm.color}` }}>
+              {tm.logo_url /* eslint-disable-next-line @next/next/no-img-element */ ? <img src={tm.logo_url} alt="" className="h-12 w-12 rounded-full object-cover" /> : <div className="grid h-12 w-12 place-items-center rounded-full bg-slate-100 text-xl">🛡️</div>}
+              <div><div className="font-bold">{tm.name}</div><div className="text-xs text-slate-500">{tm.short_name} · view players &amp; top performers →</div></div>
+            </Link>))}
+        </div>
+      </section>}
 
       <section>
         <h2 className="section-title">Tournaments</h2>
