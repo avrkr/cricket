@@ -25,6 +25,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
               Cric<span className="text-amber-400">Auction</span>
             </Link>
             <span className="ml-auto" />
+            <Link href="/manual" className="text-slate-300 hover:text-white">📖 Manual</Link>
             {user ? (<>
               <Link href="/tournaments/new" className="text-slate-300 hover:text-white">+ New tournament</Link>
               <Link href="/notifications" className="relative text-slate-300 hover:text-white">🔔

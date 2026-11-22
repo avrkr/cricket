@@ -13,6 +13,7 @@ export default async function Home() {
         <span className="pill bg-amber-400 text-slate-900">LIVE AUCTIONS · FIXTURES · STANDINGS</span>
         <h1 className="mt-4 max-w-2xl text-4xl font-black leading-tight tracking-tight sm:text-5xl">Where cricket teams are built, <span className="text-amber-400">one bid at a time.</span></h1>
         <p className="mt-3 max-w-xl text-emerald-100">Register your team or yourself as a player, then watch the auction unfold live — bids, purses and squads update in real time.</p>
+        <Link href="/manual" className="mt-5 inline-flex rounded-xl bg-white/15 px-5 py-2.5 text-sm font-bold transition hover:bg-white/25">📖 Read the user manual →</Link>
       </section>
 
       <section className="grid gap-5 md:grid-cols-2">
