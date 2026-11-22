@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { session, canManage } from "@/lib/supabase/server";
-import { setStatus, setCategory, createAuction, createMatch, addAward, retain } from "@/app/actions";
+import { setCategory, createAuction, createMatch, addAward, retain } from "@/app/actions";
 import { Field } from "@/components/Field";
 import CopyLink from "@/components/CopyLink";
 
@@ -29,10 +29,8 @@ export default async function Tournament({ params }: { params: Promise<{ id: str
   const tname = (tid: string | null) => T.find((x) => x.id === tid)?.short_name ?? "?";
   const pname = (pid: string | null) => P.find((x) => x.id === pid)?.full_name ?? "—";
   const code = (tid: string) => secrets.data?.find((s) => s.team_id === tid)?.code;
-  const pending = [...T.filter((x) => x.status === "pending").map((x) => ({ table: "teams" as const, row: x, label: `Team: ${x.name} (${x.owner_name})` })),
-    ...P.filter((x) => x.status === "pending").map((x) => ({ table: "players" as const, row: x, label: `Player: ${x.full_name} · ${x.role}` }))];
-  const approvedTeams = T.filter((x) => x.status === "approved");
-  const approvedPlayers = P.filter((x) => x.status === "approved");
+  const approvedTeams = T;
+  const approvedPlayers = P;
   const liveAuction = auctions.data?.find((a) => a.status === "live" || a.status === "paused");
 
   return (
@@ -60,16 +58,6 @@ export default async function Tournament({ params }: { params: Promise<{ id: str
 
       {manage && <>
         <H>Admin panel</H>
-        <div className="card space-y-3">
-          <b>Pending approvals ({pending.length})</b>
-          {!pending.length && <p className="text-sm text-slate-500">All caught up.</p>}
-          {pending.map(({ table, row, label }) => (
-            <div key={row.id} className="flex flex-wrap items-center gap-2 rounded-xl bg-slate-50 p-3 text-sm">
-              <span className="flex-1 font-medium">{label}</span>
-              <form action={setStatus.bind(null, table, row.id, id, "approved")}><button className="btn">Approve</button></form>
-              <form action={setStatus.bind(null, table, row.id, id, "rejected")}><button className="btn-alt">Reject</button></form>
-            </div>))}
-        </div>
         {!!approvedTeams.length && <div className="card mt-4 space-y-2">
           <b>Team bidding links <span className="font-normal text-slate-500">— send each link privately to its owner</span></b>
           {approvedTeams.map((tm) => code(tm.id) && (

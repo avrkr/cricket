@@ -4,7 +4,6 @@ import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { session, supabaseServer } from "@/lib/supabase/server";
 import { tournamentSchema, teamSchema, playerSchema } from "@/lib/schemas";
-import { sendEmail } from "@/lib/email";
 
 type Result = { error?: string; to?: string };
 // Form actions return {error}/{to} (thrown errors are masked in production builds).
@@ -88,21 +87,6 @@ export async function registerPlayer(tid: string, f: FormData) {
     const code = "PL-" + id.replace(/-/g, "").slice(0, 8).toUpperCase();
     return `/t/${tid}/status?${new URLSearchParams({ code, phone: v.phone })}`;
   });
-}
-
-export async function setStatus(table: "teams" | "players", id: string, tid: string, status: "approved" | "rejected") {
-  const { supabase } = await need();
-  const { data, error } = await supabase.from(table).update({ status }).eq("id", id).select("*").single();
-  if (error) throw new Error(error.message);
-  const site = process.env.NEXT_PUBLIC_SITE_URL ?? "";
-  let extra = "";
-  if (table === "teams" && status === "approved") {
-    const { data: sec } = await supabase.from("team_secrets").select("code").eq("team_id", id).single();
-    if (sec) extra = `\nYour private bidding link (do not share): ${site}/t/${tid}/auction/bid?code=${sec.code}`;
-  }
-  await sendEmail(table === "teams" ? data.owner_email : data.email, `Your ${table === "teams" ? "team" : "player"} registration was ${status}`,
-    `${data.name ?? data.full_name}: ${status}. Details: ${site}/t/${tid}${extra}`);
-  revalidatePath(`/t/${tid}`);
 }
 
 export async function setCategory(id: string, tid: string, f: FormData) {

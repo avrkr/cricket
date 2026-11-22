@@ -2,7 +2,6 @@ import Link from "next/link";
 import { session } from "@/lib/supabase/server";
 
 type SP = { code?: string; phone?: string; team?: string; email?: string };
-const tone: Record<string, string> = { pending: "bg-amber-100 text-amber-800", approved: "bg-emerald-100 text-emerald-800", rejected: "bg-red-100 text-red-800" };
 
 export default async function Status({ params, searchParams }: { params: Promise<{ id: string }>; searchParams: Promise<SP> }) {
   const { id } = await params; const q = await searchParams;
@@ -20,13 +19,13 @@ export default async function Status({ params, searchParams }: { params: Promise
           {player && <>
             <div className="text-lg font-bold">{player.full_name}</div>
             <div>Registration ID: <b className="font-mono">{player.reg_code}</b> <span className="text-xs text-slate-500">(save this)</span></div>
-            <div>Approval: <span className={`pill ${tone[player.status]}`}>{player.status}</span> · Auction: <span className="pill">{player.auction_status}</span></div>
+            <div>Registered ✔ · Auction: <span className="pill">{player.auction_status}</span></div>
             {player.team && <div>🏆 Won by <b>{player.team}</b> for {player.sold_price?.toLocaleString("en-IN")}</div>}
           </>}
           {team && <>
             <div className="text-lg font-bold">{team.name}</div>
-            <div>Approval: <span className={`pill ${tone[team.status]}`}>{team.status}</span></div>
-            <p className="text-sm text-slate-600">Once approved, the organizer will send your private bidding link to your email.</p>
+            <div>Registered ✔</div>
+            <p className="text-sm text-slate-600">The organizer will send you your private bidding link.</p>
           </>}
         </div>)}
       {asked && !player && !team && <div className="card text-red-700">No registration matches those details.</div>}
